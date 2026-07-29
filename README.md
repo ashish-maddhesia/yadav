@@ -246,3 +246,4 @@ Go to **GitHub Repository** -> **Settings** -> **Secrets and variables** -> **Ac
 2. **Environment Variables:** Confidential values (DB credentials, ports) are managed outside source control via `.env`.
 3. **Graceful Shutdown:** The server releases PostgreSQL connection pool resources cleanly on shutdown signals (`SIGINT`/`SIGTERM`).
 CI/CD Test
+Pipeline Test Thu Jul 30 12:30:30 AM IST 2026
