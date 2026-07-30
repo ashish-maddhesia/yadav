@@ -247,3 +247,6 @@ Go to **GitHub Repository** -> **Settings** -> **Secrets and variables** -> **Ac
 3. **Graceful Shutdown:** The server releases PostgreSQL connection pool resources cleanly on shutdown signals (`SIGINT`/`SIGTERM`).
 CI/CD Test
 Pipeline Test Thu Jul 30 12:30:30 AM IST 2026
+
+## GitHub Actions Test
+This commit is used to test the CI/CD pipeline.
