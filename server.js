@@ -17,7 +17,13 @@ const PORT = process.env.PORT || 8000;
 // Enable JSON request body parsing
 app.use(express.json());
 
-/**
+app.get("/status", (req, res) => {
+  res.json({
+    status: "success",
+    message: "CI/CD pipeline is working!",
+    timestamp: new Date().toISOString()
+  });
+});/**
  * GET /
  * Root route returning welcome message.
  */
