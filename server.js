@@ -15,6 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Enable JSON request body parsing
+//be  a good man with a good path
 app.use(express.json());
 
 app.get("/status", (req, res) => {
