@@ -15,17 +15,18 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2.pem
+          printf '%s' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2.pem
           chmod 600 ~/.ssh/ec2.pem
+          file ~/.ssh/ec2.pem
+          ssh-keygen -l -f ~/.ssh/ec2.pem
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy
         run: |
-          ssh -i ~/.ssh/ec2.pem \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            cd /home/ubuntu/yadav
-            git pull origin main
-            npm install
-            pm2 restart yadav-backend --update-env
-            EOF
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          set -e
+          cd /home/ubuntu/yadav
+          git pull origin main
+          npm install
+          pm2 restart yadav-backend --update-env
+          EOF
