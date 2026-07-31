@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CI/CD Pipeline Deployment Verification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: rgba(22, 30, 49, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-cyan: #38bdf8;
+      --accent-purple: #818cf8;
+      --accent-green: #34d399;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(129, 140, 248, 0.15) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: var(--accent-green);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 20px rgba(52, 211, 153, 0.2);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .card-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-subtext {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .tester-section {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+
+    .tester-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .tester-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(129, 140, 248, 0.3));
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    pre {
+      background: #060911;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      max-height: 250px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-cyan);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">
+        <span class="pulse-dot"></span>
+        CI/CD Test Status: Deployed & Active
+      </div>
+      <h1>CI/CD Pipeline Demo</h1>
+      <p class="subtitle">Express.js API live instance powered by GitHub Actions deployment workflow.</p>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Environment</div>
+        <div class="card-value" id="env-val">Production</div>
+        <div class="card-subtext">Running on Node.js / Express</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Server Uptime</div>
+        <div class="card-value" id="uptime-val">Loading...</div>
+        <div class="card-subtext">Refreshed live from /health</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Deployment Target</div>
+        <div class="card-value">AWS EC2</div>
+        <div class="card-subtext">Branch: <code>main</code></div>
+      </div>
+    </div>
+
+    <div class="tester-section">
+      <div class="tester-header">
+        <div class="tester-title">API Pipeline Endpoint Tester</div>
+        <div class="button-group">
+          <button onclick="testEndpoint('/status')">GET /status</button>
+          <button onclick="testEndpoint('/health')">GET /health</button>
+          <button onclick="testEndpoint('/generate-password')">GET /generate-password</button>
+        </div>
+      </div>
+      <pre id="response-output">// Click an endpoint button above to test real-time API response</pre>
+    </div>
+
+    <footer>
+      Testing CI/CD workflow updates • Edit <code>public/index.html</code> or <code>server.js</code> to test push pipeline.
+    </footer>
+  </div>
+
+  <script>
+    async function updateMetrics() {
+      try {
+        const res = await fetch('/health');
+        const data = await res.json();
+        document.getElementById('uptime-val').textContent = data.uptime || 'Active';
+      } catch (e) {
+        document.getElementById('uptime-val').textContent = 'Online';
+      }
+    }
+
+    async function testEndpoint(endpoint) {
+      const output = document.getElementById('response-output');
+      output.textContent = `Fetching ${endpoint}...`;
+      try {
+        const res = await fetch(endpoint);
+        const data = await res.json();
+        output.textContent = `// Response from ${endpoint} (Status: ${res.status})\n` + JSON.stringify(data, null, 2);
+      } catch (err) {
+        output.textContent = `Error fetching ${endpoint}: ` + err.message;
+      }
+    }
+
+    updateMetrics();
+    setInterval(updateMetrics, 5000);
+  </script>
+</body>
+</html>

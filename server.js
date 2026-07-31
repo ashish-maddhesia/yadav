@@ -5,6 +5,7 @@
  * Configures express middleware, routes, error handling, and server listening.
  */
 
+const path = require('path');
 const express = require('express');
 require('dotenv').config();
 
@@ -14,8 +15,10 @@ const { pool } = require('./db');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Enable JSON request body parsing
-//be  a good man with a good path
 app.use(express.json());
 
 app.get("/status", (req, res) => {
@@ -24,12 +27,14 @@ app.get("/status", (req, res) => {
     message: "CI/CD pipeline is working!",
     timestamp: new Date().toISOString()
   });
-});/**
+});
+
+/**
  * GET /
- * Root route returning welcome message.
+ * Root route returning HTML deployment status page.
  */
 app.get('/', (req, res) => {
-  res.status(200).send('Hi from CI/CD Demo 🚀');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 /**
@@ -94,9 +99,3 @@ process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 module.exports = app;
-// Deploy Test
-// Auto Deploy Test
-// hi this 9isk tpoppn kwqefn ie
-//FINAFepinfpinfi
-// this is for testing
-//this is world is too small so be a good man and bad also as per the peron other wiese go to the wild 
