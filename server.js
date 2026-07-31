@@ -24,7 +24,7 @@ app.use(express.json());
 app.get("/status", (req, res) => {
   res.json({
     status: "success",
-    message: "CI/CD pipeline is working!",
+    message: "CI/CD pipeline is working   but there is no frontend!",
     timestamp: new Date().toISOString()
   });
 });
