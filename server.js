@@ -56,6 +56,7 @@ app.use((req, res) => {
   });
 });
 
+//res.send("Hi from CI/CD Demo v2 🚀");
 /**
  * Global Error Handling Middleware
  */
