@@ -17,20 +17,16 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2.pem
           chmod 600 ~/.ssh/ec2.pem
-
-          echo "First line:"
-          head -1 ~/.ssh/ec2.pem
-
-          echo "Last line:"
-          tail -1 ~/.ssh/ec2.pem
-
-          file ~/.ssh/ec2.pem
-
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Test SSH
+      - name: Deploy to EC2
         run: |
-          ssh -v -o StrictHostKeyChecking=no \
+          ssh -o StrictHostKeyChecking=no \
             -i ~/.ssh/ec2.pem \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "echo Connected Successfully"
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+              cd ~/yadav
+              git pull origin main
+              npm install
+              pm2 restart yadav-backend --update-env
+              pm2 save
+          EOF
