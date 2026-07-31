@@ -24,7 +24,7 @@ app.use(express.json());
 app.get("/status", (req, res) => {
   res.json({
     status: "success",
-    message: "CI/CD pipeline is working   but there is no frontend!",
+    message: "CI/CD pipeline is working but there is no frontend!",
     timestamp: new Date().toISOString()
   });
 });
@@ -61,7 +61,7 @@ app.use((req, res) => {
   });
 });
 
-//res.send("Hi from CI/CD Demo v2 🚀");
+res.send("Hi from CI/CD Demo v2 🚀");
 /**
  * Global Error Handling Middleware
  */
